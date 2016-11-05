@@ -1,3 +1,9 @@
+Travis
+======
+.. image:: https://travis-ci.org/brettcannon/cpython-ci-test.svg?branch=master
+    :target: https://travis-ci.org/brettcannon/cpython-ci-test
+
+
 This is Python version 3.7.0 alpha 1
 ====================================
 
