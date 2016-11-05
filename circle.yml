@@ -1,0 +1,11 @@
+machine:
+  python:
+    version: 3.5.1
+general:
+dependencies:
+  override:
+    - ./configure --with-pydebug
+    - make -j
+test:
+  override:
+    - ./python -bb -E -W default -m test -r -w -uall -j0
