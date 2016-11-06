@@ -41,5 +41,3 @@ script:
 
 notifications:
   email: false
-
-# vim: sw=2 expandtab
