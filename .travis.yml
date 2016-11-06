@@ -14,31 +14,31 @@ matrix:
     - os: linux
       compiler: gcc
       env:
-        - TESTING=cpython
         - PYTHON=python
     - os: linux
       compiler: clang
       env:
-        - TESTING=cpython
         - PYTHON=python
     - os: osx
       compiler: clang  # gcc is just a symlink for clang.
       env:
-        - TESTING=cpython
         - PYTHON=python.exe
     - os: linux
       language: python
       python: 3.5
-      env: TESTING=docs
+      before_script:
+        - cd Doc && make venv PYTHON=python3
       script:
-        - cd Doc
-        - make venv PYTHON=python3
-        - make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck"
+        - cd Doc && make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck"
 
-script:
+before_script:
   - ./configure --with-pydebug
   - make -j4
+
+script:
   - ./$PYTHON -bb -E -W default -m test -r -w -uall -j0
 
 notifications:
   email: false
+
+# vim: sw=2 expandtab
