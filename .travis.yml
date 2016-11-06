@@ -27,16 +27,17 @@ matrix:
       language: python
       python: 3.5
       before_script:
-        - cd Doc && make venv PYTHON=python3
+        - cd Doc
+        - make venv PYTHON=python3
       script:
-        - cd Doc && make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck"
+        - make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck"
 
 before_script:
   - ./configure --with-pydebug
   - make -j4
 
 script:
-  - ./$PYTHON -bb -E -W default -m test -r -w -uall -j0
+  - ./$PYTHON -bb -E -W default -m test -r -w -uall -j8
 
 notifications:
   email: false
