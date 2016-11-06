@@ -1,10 +1,6 @@
 language: c
 # For doc-building dependencies.
 cache: pip
-
-compiler:
-  - gcc
-  - clang
   
 addons:
   apt:
@@ -12,15 +8,23 @@ addons:
       - tk-dev
       - liblzma-dev
       - python-pip
-
-# Would rather use Python 3 and `make venv`, but not sure how to get it installed in the container easily.
-before_script: pip install --user -U sphinx  
+      
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      env: TESTING=cpython
+    - os: linux
+      compiler: clang
+      env: TESTING=cpython
+    - os: linux
+      language: python
+      python: 3.5
+      env: TESTING=docs
 
 script:
-  - ./configure --with-pydebug && make -j && ./python -bb -E -W default -m test -r -w -uall -j0
-  - cd Doc && make html SPHINXOPTS="-nW -q -b linkcheck"
+  - if [[ "$TESTING" == "cpython" ]]; then ./configure --with-pydebug && make -j && ./python -bb -E -W default -m test -r -w -uall -j0 ; fi
+  - if [[ "$TESTING" == "docs" ]]; then cd Doc && make venv PYTHON=python3 && make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck" ; fi
 
-# Since this is just a demo repository, we don't want people who may not even
-# be involved in the demo to get an email when build fail.
 notifications:
   email: false
