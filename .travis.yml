@@ -14,26 +14,31 @@ matrix:
     - os: linux
       compiler: gcc
       env:
-        - TESTING=cpython
         - PYTHON=python
     - os: linux
       compiler: clang
       env:
-        - TESTING=cpython
         - PYTHON=python
     - os: osx
       compiler: clang  # gcc is just a symlink for clang.
       env:
-        - TESTING=cpython
         - PYTHON=python.exe
     - os: linux
       language: python
       python: 3.5
-      env: TESTING=docs
+      before_script:
+        - cd Doc
+        - make venv PYTHON=python3
+      script:
+        - make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck"
+
+# Travis provides only 2 cores.
+before_script:
+  - ./configure --with-pydebug
+  - make -j4
 
 script:
-  - if [[ "$TESTING" == "cpython" ]]; then ./configure --with-pydebug && make -j && ./$PYTHON -bb -E -W default -m test -r -w -uall -j0 ; fi
-  - if [[ "$TESTING" == "docs" ]]; then cd Doc && make venv PYTHON=python3 && make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck" ; fi
+  - ./$PYTHON -bb -E -W default -m test -r -w -uall -j4
 
 notifications:
   email: false
