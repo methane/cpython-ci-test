@@ -32,12 +32,13 @@ matrix:
       script:
         - make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck"
 
+# Travis provides only 2 cores.
 before_script:
   - ./configure --with-pydebug
   - make -j4
 
 script:
-  - ./$PYTHON -bb -E -W default -m test -r -w -uall -j8
+  - ./$PYTHON -bb -E -W default -m test -r -w -uall -j4
 
 notifications:
   email: false
