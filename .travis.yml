@@ -30,10 +30,15 @@ matrix:
       language: python
       python: 3.5
       env: TESTING=docs
+      script:
+        - cd Doc
+        - make venv PYTHON=python3
+        - make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck"
 
 script:
-  - if [[ "$TESTING" == "cpython" ]]; then ./configure --with-pydebug && make -j && ./$PYTHON -bb -E -W default -m test -r -w -uall -j0 ; fi
-  - if [[ "$TESTING" == "docs" ]]; then cd Doc && make venv PYTHON=python3 && make html SPHINXBUILD="./venv/bin/python3 -m sphinx" SPHINXOPTS="-nW -q -b linkcheck" ; fi
+  - ./configure --with-pydebug
+  - make -j4
+  - ./$PYTHON -bb -E -W default -m test -r -w -uall -j0
 
 notifications:
   email: false
